@@ -1,0 +1,30 @@
+﻿@page
+@model StormEyeWeb.Pages.Cartilhas.IndexModel
+@{
+    ViewData["Title"] = "Cartilhas";
+}
+<h1>Cartilhas</h1>
+
+<a asp-page="Create" class="btn btn-primary mb-2">Nova Cartilha</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Sintoma</th>
+            <th>Ativo</th>
+            <th>Catástrofe</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cartilha in Model.Cartilhas)
+        {
+            <tr>
+                <td>@cartilha.NomeCatastrofeM</td>
+                <td>@cartilha.SintomaCatastrofeM</td>
+                <td>@(cartilha.Ativo ? "Sim" : "Não")</td>
+                <td>@cartilha.CatastrofeMapeada?.NomeCatastrofeM</td>
+            </tr>
+        }
+    </tbody>
+</table>

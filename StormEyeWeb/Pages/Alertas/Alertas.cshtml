@@ -1,0 +1,70 @@
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
+using System.Net.Http.Headers;
+
+namespace StormEyeWeb.Pages.Alertas
+{
+    public class IndexModel : PageModel
+    {
+        private readonly HttpClient _httpClient;
+
+        public IndexModel(IHttpClientFactory httpClientFactory)
+        {
+            _httpClient = httpClientFactory.CreateClient();
+        }
+
+        public List<GdacsAlerta>
+    Alertas { get; set; } = new();
+
+    public async Task OnGetAsync()
+    {
+    var url = "https://www.gdacs.org/gdacsapi/api/events/geteventlist/format/json";
+
+    var request = new HttpRequestMessage(HttpMethod.Get, url);
+    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+    var response = await _httpClient.SendAsync(request);
+    if (response.IsSuccessStatusCode)
+    {
+    using var stream = await response.Content.ReadAsStreamAsync();
+    var result = await JsonSerializer.DeserializeAsync<GdacsResponse>
+        (stream);
+        Alertas = result?.features?
+        .Select(f => new GdacsAlerta
+        {
+        Tipo = f.properties?.eventtype,
+        Titulo = f.properties?.eventname,
+        Data = f.properties?.fromdate
+        })
+        .Take(5)
+        .ToList() ?? new List<GdacsAlerta>
+            ();
+            }
+            }
+
+            public class GdacsResponse
+            {
+            public List<Feature>
+                features { get; set; }
+                }
+
+                public class Feature
+                {
+                public Properties properties { get; set; }
+                }
+
+                public class Properties
+                {
+                public string eventname { get; set; }
+                public string eventtype { get; set; }
+                public DateTime? fromdate { get; set; }
+                }
+
+                public class GdacsAlerta
+                {
+                public string Titulo { get; set; }
+                public string Tipo { get; set; }
+                public DateTime? Data { get; set; }
+                }
+                }
+                }

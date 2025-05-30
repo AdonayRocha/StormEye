@@ -1,0 +1,26 @@
+﻿@page
+@model StormEyeWeb.Pages.Catastrofes.IndexModel
+@{
+    ViewData["Title"] = "Catástrofes";
+}
+<h1>Catástrofes</h1>
+<a asp-page="Create" class="btn btn-primary">Nova Catástrofe</a>
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Sintoma</th>
+            <th>Ativo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var catastrofe in Model.Catastrofes)
+        {
+        <tr>
+            <td>@catastrofe.NomeCatastrofeM</td>
+            <td>@catastrofe.SintomaCatastrofeM</td>
+            <td>@catastrofe.AtivoM</td>
+        </tr>
+        }
+    </tbody>
+</table>

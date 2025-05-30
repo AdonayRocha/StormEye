@@ -1,0 +1,34 @@
+﻿@page
+@model StormEyeWeb.Pages.Cartilhas.CreateModel
+@{
+    ViewData["Title"] = "Nova Cartilha";
+}
+
+<h1>Nova Cartilha</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Cartilha.NomeCatastrofeM"></label>
+        <input asp-for="Cartilha.NomeCatastrofeM" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Cartilha.SintomaCatastrofeM"></label>
+        <input asp-for="Cartilha.SintomaCatastrofeM" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Cartilha.Ativo"></label>
+        <input asp-for="Cartilha.Ativo" type="checkbox" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Cartilha.IdCatastrofeM">Catástrofe Relacionada</label>
+        <select asp-for="Cartilha.IdCatastrofeM" asp-items="Model.Catastrofes" class="form-control">
+            <option value="">Selecione</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a asp-page="Index" class="btn btn-secondary">Voltar</a>
+</form>

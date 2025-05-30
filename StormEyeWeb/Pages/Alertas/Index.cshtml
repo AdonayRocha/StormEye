@@ -1,0 +1,34 @@
+﻿@page
+@model StormEyeWeb.Pages.Alertas.IndexModel
+@{
+    ViewData["Title"] = "Alertas GDACS";
+}
+
+<h1>Últimos Alertas GDACS</h1>
+
+@if (Model.Alertas.Count == 0)
+{
+    <p>Nenhum alerta disponível no momento.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Título</th>
+                <th>Tipo</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var alerta in Model.Alertas)
+            {
+                <tr>
+                    <td>@alerta.Titulo</td>
+                    <td>@alerta.Tipo</td>
+                    <td>@(alerta.Data?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

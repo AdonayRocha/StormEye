@@ -7,10 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
 
 // Adiciona Oracle EF Core
 builder.Services.AddDbContext<StormEyeContext>(options =>
-    options.UseOracle(builder.Configuration.GetConnectionString("OracleDbConnection")));
+    options.UseOracle(builder.Configuration.GetConnectionString("OracleDb")));
 
 var app = builder.Build();
 
