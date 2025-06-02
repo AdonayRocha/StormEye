@@ -45,7 +45,6 @@ namespace StormEyeWeb.Pages.Alertas
             }
             catch
             {
-                // Você pode logar ou exibir um erro
             }
         }
     }

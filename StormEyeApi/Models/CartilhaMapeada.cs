@@ -3,21 +3,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StormEyeApi.Models
 {
+    [Table("TGS_CARTILHA_MAPEADA")]
     public class CartilhaMapeada
     {
         [Key]
-        public int Id { get; set; }
+        [Column("IDCARTILHAM")]
+        public int IdCartilhaM { get; set; }
 
-        [Required]
-        public string NomeCatastrofeM { get; set; }
+        [Column("IDCATASTROFEM")]
+        public int IdCatastrofeM { get; set; } 
 
-        public string? SintomaCatastrofeM { get; set; }
+        [Column("NOMECARTILHAM")]
+        public string Nome { get; set; } = string.Empty;
 
+        [Column("DESCRICAOCARTILHA")]
+        public string? Descricao { get; set; }
+
+        [Column("ATIVO")]
         public bool Ativo { get; set; }
 
-        [ForeignKey("CatastrofeMapeada")]
-        public int IdCatastrofeM { get; set; }
-
-        public CatastrofeMapeada? CatastrofeMapeada { get; set; }
+        public virtual CatastrofeMapeada Catastrofe { get; set; }
     }
 }

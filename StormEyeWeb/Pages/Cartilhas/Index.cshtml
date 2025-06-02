@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Cartilhas";
 }
+
 <h1>Cartilhas</h1>
 
 <a asp-page="Create" class="btn btn-primary mb-2">Nova Cartilha</a>
@@ -11,7 +12,7 @@
     <thead>
         <tr>
             <th>Nome</th>
-            <th>Sintoma</th>
+            <th>Descrição</th>
             <th>Ativo</th>
             <th>Catástrofe</th>
         </tr>
@@ -20,10 +21,10 @@
         @foreach (var cartilha in Model.Cartilhas)
         {
             <tr>
-                <td>@cartilha.NomeCatastrofeM</td>
-                <td>@cartilha.SintomaCatastrofeM</td>
+                <td>@cartilha.Nome</td>
+                <td>@cartilha.Descricao</td>
                 <td>@(cartilha.Ativo ? "Sim" : "Não")</td>
-                <td>@cartilha.CatastrofeMapeada?.NomeCatastrofeM</td>
+                <td>@cartilha.Catastrofe?.NomeCatastrofeM</td>
             </tr>
         }
     </tbody>

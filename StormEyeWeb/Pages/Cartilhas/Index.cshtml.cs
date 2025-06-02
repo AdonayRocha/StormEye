@@ -19,8 +19,9 @@ namespace StormEyeWeb.Pages.Cartilhas
         public async Task OnGetAsync()
         {
             Cartilhas = await _context.Cartilhas
-                .Include(c => c.CatastrofeMapeada)
+                .Include(c => c.Catastrofe) 
                 .ToListAsync();
         }
+
     }
 }
