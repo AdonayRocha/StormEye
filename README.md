@@ -4,15 +4,15 @@
 classDiagram
 
 %% ===== ENTIDADES PRINCIPAIS =====
-class CatastrofeMapeada {
-  +int Id
-  +string Nome
-  +DateTime Data
-  +string Descricao
-  +string Localizacao
-  +string Tipo
-  +string Gravidade
+classDiagram
+class CatastrofeMapeadaController {
+  +getAll() GET /api/catastrofes
+  +getById(id: int) GET /api/catastrofes/{id}
+  +create(CatastrofeMapeada catastrofe) POST /api/catastrofes
+  +update(id: int, CatastrofeMapeada catastrofe) PUT /api/catastrofes/{id}
+  +delete(id: int) DELETE /api/catastrofes/{id}
 }
+
 
 class CartilhaMapeada {
   +int Id
