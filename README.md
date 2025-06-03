@@ -2,6 +2,11 @@
  
 ```mermaid
 classDiagram
+    class OracleDB {
+        +Tabela: TGS_CATASTROFE_MAPEADA
+        +Tabela: TGS_CARTILHA_MAPEADA
+    }
+
     class CatastrofeMapeada {
         +int IdCatastrofeM
         +string NomeCatastrofeM
@@ -19,6 +24,10 @@ classDiagram
         +CatastrofeMapeada Catastrofe
     }
 
+    class AlertasExternosController {
+        +GetUltimosAlertas(): IActionResult
+    }
+
     class AlertaGDACS {
         +string? Titulo
         +string? Descricao
@@ -26,10 +35,19 @@ classDiagram
         +string? DataPublicacao
     }
 
-    class AlertasExternosController {
-        +GetUltimosAlertas(): IActionResult
+    class StormEyeAPI {
+        +Exposição via Swagger
+        +Acesso por HTTP
     }
+
+    OracleDB <.. CatastrofeMapeada : lê/escreve
+    OracleDB <.. CartilhaMapeada : lê/escreve
 
     CatastrofeMapeada --> CartilhaMapeada : contém
     CartilhaMapeada --> CatastrofeMapeada : pertence a
-    AlertasExternosController --> AlertaGDACS : consome
+
+    AlertasExternosController --> AlertaGDACS : consome XML
+    AlertasExternosController --> StormEyeAPI : integra-se
+
+    StormEyeAPI --> "Serviços externos" : fornece dados mapeados
+
