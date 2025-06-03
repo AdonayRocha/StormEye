@@ -2,17 +2,16 @@
  
 ```mermaid
 classDiagram
-
 %% ===== ENTIDADES PRINCIPAIS =====
-classDiagram
-class CatastrofeMapeadaController {
-  +getAll() GET /api/catastrofes
-  +getById(id: int) GET /api/catastrofes/{id}
-  +create(CatastrofeMapeada catastrofe) POST /api/catastrofes
-  +update(id: int, CatastrofeMapeada catastrofe) PUT /api/catastrofes/{id}
-  +delete(id: int) DELETE /api/catastrofes/{id}
+class CatastrofeMapeada {
+  +int Id
+  +string Nome
+  +DateTime Data
+  +string Descricao
+  +string Localizacao
+  +string Tipo
+  +string Gravidade
 }
-
 
 class CartilhaMapeada {
   +int Id
@@ -44,7 +43,7 @@ class StormEyeContext {
 class GDACSService {
   +string ApiUrl
   +string ApiKey
-  +Task~List~AlertaExterno~~ GetLatestAlertsAsync()
+  +Task~List<AlertaExterno>~ GetLatestAlertsAsync()
   +Task ProcessarAlertasPeriodicamente()
 }
 
@@ -55,17 +54,17 @@ class NotificationService {
 %% ===== CONTROLLERS =====
 class CatastrofeMapeadaController {
   +getAll() GET /api/catastrofes
-  +getById() GET /api/catastrofes/{id}
-  +create() POST /api/catastrofes
-  +update() PUT /api/catastrofes/{id}
-  +delete() DELETE /api/catastrofes/{id}
+  +getById(id: int) GET /api/catastrofes/{id}
+  +create(catastrofe: CatastrofeMapeada) POST /api/catastrofes
+  +update(id: int, catastrofe: CatastrofeMapeada) PUT /api/catastrofes/{id}
+  +delete(id: int) DELETE /api/catastrofes/{id}
 }
 
 class AlertasExternosController {
   +getAll() GET /api/alertas-externos
-  +getById() GET /api/alertas-externos/{id}
+  +getById(id: int) GET /api/alertas-externos/{id}
   +processarGDACS() POST /api/alertas-externos/processar-gdacs
-  +enviarNotificacao() POST /api/alertas-externos/enviar-notificacao
+  +enviarNotificacao(alerta: AlertaExterno) POST /api/alertas-externos/enviar-notificacao
 }
 
 %% ===== RELACIONAMENTOS =====
@@ -82,3 +81,4 @@ AlertasExternosController --> NotificationService
 AlertasExternosController --> StormEyeContext
 
 NotificationService --> AlertaExterno : envia
+
