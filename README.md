@@ -3,36 +3,33 @@
 ```mermaid
 classDiagram
     class CatastrofeMapeada {
-        +int idCatastrofeM @Not Null
-        +String nomeCatastrofeM @Not Null
-        +String sintomaCatastrofeM
-        +Boolean ativoM
-        +json exibeCatastrofeMapeada(get)
-        +json alteraCatastrofeMapeada(put)
-        +json removeCatastrofeMapeada(put)
-        +json exibeCatastrofeMapeadaId(get)
+        +int IdCatastrofeM
+        +string NomeCatastrofeM
+        +string? SintomaCatastrofeM
+        +bool Ativo
+        +List~CartilhaMapeada~ Cartilhas
     }
- 
+
     class CartilhaMapeada {
-        +int idCatastrofeM @Not Null
-        +String nomeCatastrofeM @Not Null
-        +String sintomaCatastrofeM
-        +Boolean ativo
-        +json exibeCatastrofeMapeada(get)
-        +json alteraCatastrofeMapeada(put)
-        +json removeCatastrofeMapeada(put)
-        +json exibeCatastrofeMapeadaId(get)
+        +int IdCartilhaM
+        +int IdCatastrofeM
+        +string Nome
+        +string? Descricao
+        +bool Ativo
+        +CatastrofeMapeada Catastrofe
     }
- 
-    CatastrofeMapeada --> OracleDB : usa
-    CartilhaMapeada --> OracleDB : usa
-    OracleDB --> OpenAPI : conecta
-    OpenAPI : External Services
- 
-    class OracleDB {
-        LocalHost
+
+    class AlertaGDACS {
+        +string? Titulo
+        +string? Descricao
+        +string? Link
+        +string? DataPublicacao
     }
- 
-    class OpenAPI {
-        External Services
+
+    class AlertasExternosController {
+        +GetUltimosAlertas(): IActionResult
     }
+
+    CatastrofeMapeada --> CartilhaMapeada : contém
+    CartilhaMapeada --> CatastrofeMapeada : pertence a
+    AlertasExternosController --> AlertaGDACS : consome
