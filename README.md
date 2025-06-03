@@ -56,16 +56,11 @@ direction LR
 	    +enviarNotificacao(alerta: AlertaExterno)
     }
 
-    class UntitledClass {
-    }
-
     StormEyeContext --> CatastrofeMapeada : contém
     StormEyeContext --> CartilhaMapeada : contém
     StormEyeContext --> AlertaExterno : contém
     GDACSService --> NotificationService : usa
-    GDACSService --> StormEyeContext : persiste
-    AlertasExternosController --> GDACSService
+    AlertasExternosController --> GDACSService : busca
     AlertasExternosController --> NotificationService
     AlertasExternosController --> StormEyeContext
     NotificationService --> AlertaExterno : envia
-    StormEyeContext -- UntitledClass
