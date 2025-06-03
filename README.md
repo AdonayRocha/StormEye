@@ -45,22 +45,16 @@ direction LR
 	    +Task ProcessarAlertasPeriodicamente()
     }
 
-    class NotificationService {
-	    +Task EnviarAlertaWebHook(string url, AlertaExterno alerta)
+    class AlertasExternosController {
+      <<Controller>>
+      +getAll()
+      +getById(id: int)
+      +processarGDACS()
     }
 
-    class AlertasExternosController {
-	    +getAll()
-	    +getById(id: int)
-	    +processarGDACS()
-	    +enviarNotificacao(alerta: AlertaExterno)
-    }
 
     StormEyeContext --> CatastrofeMapeada : contém
     StormEyeContext --> CartilhaMapeada : contém
     StormEyeContext --> AlertaExterno : contém
-    GDACSService --> NotificationService : usa
-    AlertasExternosController --> GDACSService : busca
-    AlertasExternosController --> NotificationService
-    AlertasExternosController --> StormEyeContext
-    NotificationService --> AlertaExterno : envia
+    GDACSService --> StormEyeContext : consulta/atualiza
+    AlertasExternosController --> GDACSService : utiliza
