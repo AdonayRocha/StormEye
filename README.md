@@ -2,37 +2,59 @@
  
 ```mermaid
 classDiagram
+direction LR
     class CatastrofeMapeada {
-        +int idCatastrofeM @Not Null
-        +String nomeCatastrofeM @Not Null
-        +String sintomaCatastrofeM
-        +Boolean ativoM
-        +json exibeCatastrofeMapeada(get)
-        +json alteraCatastrofeMapeada(put)
-        +json removeCatastrofeMapeada(put)
-        +json exibeCatastrofeMapeadaId(get)
+	    +int Id
+	    +string Nome
+	    +DateTime Data
+	    +string Descricao
+	    +string Localizacao
+	    +string Tipo
+	    +string Gravidade
     }
- 
+
     class CartilhaMapeada {
-        +int idCatastrofeM @Not Null
-        +String nomeCatastrofeM @Not Null
-        +String sintomaCatastrofeM
-        +Boolean ativo
-        +json exibeCatastrofeMapeada(get)
-        +json alteraCatastrofeMapeada(put)
-        +json removeCatastrofeMapeada(put)
-        +json exibeCatastrofeMapeadaId(get)
+	    +int Id
+	    +string Titulo
+	    +string Conteudo
+	    +string Categoria
     }
- 
-    CatastrofeMapeada --> OracleDB : usa
-    CartilhaMapeada --> OracleDB : usa
-    OracleDB --> OpenAPI : conecta
-    OpenAPI : External Services
- 
-    class OracleDB {
-        LocalHost
+
+    class AlertaExterno {
+	    +int Id
+	    +string Fonte
+	    +string TipoEvento
+	    +DateTime DataAlerta
+	    +string Descricao
+	    +string Localizacao
+	    +decimal Latitude
+	    +decimal Longitude
+	    +string Severidade
     }
- 
-    class OpenAPI {
-        External Services
+
+    class StormEyeContext {
+	    +CatastrofeMapeada[] Catastrofes
+	    +CartilhaMapeada[] Cartilhas
+	    +AlertaExterno[] AlertasExternos
     }
+
+    class GDACSService {
+	    +string ApiUrl
+	    +string ApiKey
+	    +Task GetLatestAlertsAsync()
+	    +Task ProcessarAlertasPeriodicamente()
+    }
+
+    class AlertasExternosController {
+      <<Controller>>
+      +getAll()
+      +getById(id: int)
+      +processarGDACS()
+    }
+
+
+    StormEyeContext --> CatastrofeMapeada : contém
+    StormEyeContext --> CartilhaMapeada : contém
+    StormEyeContext --> AlertaExterno : contém
+    GDACSService --> StormEyeContext : consulta/atualiza
+    AlertasExternosController --> GDACSService : utiliza
