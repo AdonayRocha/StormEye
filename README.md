@@ -23,7 +23,7 @@ class CartilhaMapeada {
 
 class AlertaExterno {
   +int Id
-  +string Fonte (GDACS)
+  +string Fonte
   +string TipoEvento
   +DateTime DataAlerta
   +string Descricao
@@ -54,18 +54,18 @@ class NotificationService {
 
 %% ===== CONTROLLERS =====
 class CatastrofeMapeadaController {
-  "+GET /api/catastrofes"
-  "+GET /api/catastrofes/{id}"
-  "+POST /api/catastrofes"
-  "+PUT /api/catastrofes/{id}"
-  "+DELETE /api/catastrofes/{id}"
+  +getAll() GET /api/catastrofes
+  +getById() GET /api/catastrofes/{id}
+  +create() POST /api/catastrofes
+  +update() PUT /api/catastrofes/{id}
+  +delete() DELETE /api/catastrofes/{id}
 }
 
 class AlertasExternosController {
-  "+GET /api/alertas-externos"
-  "+GET /api/alertas-externos/{id}"
-  "+POST /api/alertas-externos/processar-gdacs"
-  "+POST /api/alertas-externos/enviar-notificacao"
+  +getAll() GET /api/alertas-externos
+  +getById() GET /api/alertas-externos/{id}
+  +processarGDACS() POST /api/alertas-externos/processar-gdacs
+  +enviarNotificacao() POST /api/alertas-externos/enviar-notificacao
 }
 
 %% ===== RELACIONAMENTOS =====
