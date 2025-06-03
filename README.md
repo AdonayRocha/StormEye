@@ -2,82 +2,70 @@
  
 ```mermaid
 classDiagram
-%% ===== ENTIDADES PRINCIPAIS =====
-class CatastrofeMapeada {
-  +int Id
-  +string Nome
-  +DateTime Data
-  +string Descricao
-  +string Localizacao
-  +string Tipo
-  +string Gravidade
-}
+direction LR
+    class CatastrofeMapeada {
+	    +int Id
+	    +string Nome
+	    +DateTime Data
+	    +string Descricao
+	    +string Localizacao
+	    +string Tipo
+	    +string Gravidade
+    }
 
-class CartilhaMapeada {
-  +int Id
-  +string Titulo
-  +string Conteudo
-  +string Categoria
-}
+    class CartilhaMapeada {
+	    +int Id
+	    +string Titulo
+	    +string Conteudo
+	    +string Categoria
+    }
 
-class AlertaExterno {
-  +int Id
-  +string Fonte
-  +string TipoEvento
-  +DateTime DataAlerta
-  +string Descricao
-  +string Localizacao
-  +decimal Latitude
-  +decimal Longitude
-  +string Severidade
-}
+    class AlertaExterno {
+	    +int Id
+	    +string Fonte
+	    +string TipoEvento
+	    +DateTime DataAlerta
+	    +string Descricao
+	    +string Localizacao
+	    +decimal Latitude
+	    +decimal Longitude
+	    +string Severidade
+    }
 
-%% ===== CONTEXT =====
-class StormEyeContext {
-  +DbSet~CatastrofeMapeada~ Catastrofes
-  +DbSet~CartilhaMapeada~ Cartilhas
-  +DbSet~AlertaExterno~ AlertasExternos
-}
+    class StormEyeContext {
+	    +CatastrofeMapeada[] Catastrofes
+	    +CartilhaMapeada[] Cartilhas
+	    +AlertaExterno[] AlertasExternos
+    }
 
-%% ===== SERVIÇOS =====
-class GDACSService {
-  +string ApiUrl
-  +string ApiKey
-  +Task~List<AlertaExterno>~ GetLatestAlertsAsync()
-  +Task ProcessarAlertasPeriodicamente()
-}
+    class GDACSService {
+	    +string ApiUrl
+	    +string ApiKey
+	    +Task GetLatestAlertsAsync()
+	    +Task ProcessarAlertasPeriodicamente()
+    }
 
-class NotificationService {
-  +Task EnviarAlertaWebHook(string url, AlertaExterno alerta)
-}
+    class NotificationService {
+	    +Task EnviarAlertaWebHook(string url, AlertaExterno alerta)
+    }
 
-%% ===== CONTROLLERS =====
-class CatastrofeMapeadaController {
-  +getAll() GET /api/catastrofes
-  +getById(id: int) GET /api/catastrofes/{id}
-  +create(catastrofe: CatastrofeMapeada) POST /api/catastrofes
-  +update(id: int, catastrofe: CatastrofeMapeada) PUT /api/catastrofes/{id}
-  +delete(id: int) DELETE /api/catastrofes/{id}
-}
+    class AlertasExternosController {
+	    +getAll()
+	    +getById(id: int)
+	    +processarGDACS()
+	    +enviarNotificacao(alerta: AlertaExterno)
+    }
 
-class AlertasExternosController {
-  +getAll() GET /api/alertas-externos
-  +getById(id: int) GET /api/alertas-externos/{id}
-  +processarGDACS() POST /api/alertas-externos/processar-gdacs
-  +enviarNotificacao(alerta: AlertaExterno) POST /api/alertas-externos/enviar-notificacao
-}
+    class UntitledClass {
+    }
 
-%% ===== RELACIONAMENTOS =====
-StormEyeContext --> CatastrofeMapeada : contém
-StormEyeContext --> CartilhaMapeada : contém
-StormEyeContext --> AlertaExterno : contém
-
-GDACSService --> AlertaExterno : cria
-GDACSService --> NotificationService : usa
-GDACSService --> StormEyeContext : persiste
-
-AlertasExternosController --> GDACSService
-AlertasExternosController --> NotificationService
-AlertasExternosController --> StormEyeContext
-
-NotificationService --> AlertaExterno : envia
+    StormEyeContext --> CatastrofeMapeada : contém
+    StormEyeContext --> CartilhaMapeada : contém
+    StormEyeContext --> AlertaExterno : contém
+    GDACSService --> NotificationService : usa
+    GDACSService --> StormEyeContext : persiste
+    AlertasExternosController --> GDACSService
+    AlertasExternosController --> NotificationService
+    AlertasExternosController --> StormEyeContext
+    NotificationService --> AlertaExterno : envia
+    StormEyeContext -- UntitledClass
