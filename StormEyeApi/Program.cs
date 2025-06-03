@@ -3,7 +3,7 @@ using StormEyeApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configura o HttpClient para chamadas externas (ex: GDACS API)
+// Configura o HttpClient para chamadas externas 
 builder.Services.AddHttpClient();
 
 // Configura o EF Core com Oracle
@@ -13,7 +13,6 @@ builder.Services.AddDbContext<StormEyeContext>(options =>
 // Adiciona suporte a controllers
 builder.Services.AddControllers();
 
-// Adiciona CORS para permitir chamadas do StormEyeWeb
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -24,13 +23,12 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Adiciona suporte ao Swagger (documentação da API)
+// Adiciona suporte ao Swagger 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Ativa CORS
 app.UseCors("AllowAll");
 
 // Habilita Swagger no ambiente de desenvolvimento
@@ -40,11 +38,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Middleware de autorização (autenticação, se for o caso)
 app.UseAuthorization();
 
-// Mapeia os endpoints dos controllers
 app.MapControllers();
 
-// Inicia a aplicação
 app.Run();
