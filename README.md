@@ -49,5 +49,5 @@ classDiagram
     AlertasExternosController --> AlertaGDACS : consome XML
     AlertasExternosController --> StormEyeAPI : integra-se
 
-    StormEyeAPI --> "Serviços externos" : fornece dados mapeados
+    Serviços externos" -->|"fornece dados mapeados"| Sistema
 
