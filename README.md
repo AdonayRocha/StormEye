@@ -2,52 +2,56 @@
  
 ```mermaid
 classDiagram
-    class OracleDB {
-        +Tabela: TGS_CATASTROFE_MAPEADA
-        +Tabela: TGS_CARTILHA_MAPEADA
-    }
 
-    class CatastrofeMapeada {
-        +int IdCatastrofeM
-        +string NomeCatastrofeM
-        +string? SintomaCatastrofeM
-        +bool Ativo
-        +List~CartilhaMapeada~ Cartilhas
-    }
+%% ===== ENTIDADES =====
+class CatastrofeMapeada {
+  +int Id
+  +string Nome
+  +DateTime Data
+  +string Descricao
+  +string Localizacao
+}
 
-    class CartilhaMapeada {
-        +int IdCartilhaM
-        +int IdCatastrofeM
-        +string Nome
-        +string? Descricao
-        +bool Ativo
-        +CatastrofeMapeada Catastrofe
-    }
+class CartilhaMapeada {
+  +int Id
+  +string Titulo
+  +string Conteudo
+  +string Categoria
+}
 
-    class AlertasExternosController {
-        +GetUltimosAlertas(): IActionResult
-    }
+%% ===== CONTEXT =====
+class StormEyeContext {
+  +DbSet~CatastrofeMapeada~ Catastrofes
+  +DbSet~CartilhaMapeada~ Cartilhas
+}
 
-    class AlertaGDACS {
-        +string? Titulo
-        +string? Descricao
-        +string? Link
-        +string? DataPublicacao
-    }
+StormEyeContext --> CatastrofeMapeada : contém
+StormEyeContext --> CartilhaMapeada : contém
 
-    class StormEyeAPI {
-        +Exposição via Swagger
-        +Acesso por HTTP
-    }
+%% ===== CONTROLLERS =====
+class CatastrofeMapeadaController {
+  +GET /api/catastrofes
+  +GET /api/catastrofes/{id}
+  +POST /api/catastrofes
+  +PUT /api/catastrofes/{id}
+  +DELETE /api/catastrofes/{id}
+}
 
-    OracleDB <.. CatastrofeMapeada : lê/escreve
-    OracleDB <.. CartilhaMapeada : lê/escreve
+class CartilhaMapeadaController {
+  +GET /api/cartilhas
+  +GET /api/cartilhas/{id}
+  +POST /api/cartilhas
+  +PUT /api/cartilhas/{id}
+  +DELETE /api/cartilhas/{id}
+}
 
-    CatastrofeMapeada --> CartilhaMapeada : contém
-    CartilhaMapeada --> CatastrofeMapeada : pertence a
+CatastrofeMapeadaController --> CatastrofeMapeada
+CatastrofeMapeadaController --> StormEyeContext
 
-    AlertasExternosController --> AlertaGDACS : consome XML
-    AlertasExternosController --> StormEyeAPI : integra-se
+CartilhaMapeadaController --> CartilhaMapeada
+CartilhaMapeadaController --> StormEyeContext
 
-    Serviços externos" -->|"fornece dados mapeados"| Sistema
+WeatherForecastController --> WeatherForecast
+
+
 
