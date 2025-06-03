@@ -81,4 +81,3 @@ AlertasExternosController --> NotificationService
 AlertasExternosController --> StormEyeContext
 
 NotificationService --> AlertaExterno : envia
-
