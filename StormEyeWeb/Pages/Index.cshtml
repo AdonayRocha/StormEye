@@ -1,10 +1,31 @@
 ﻿@page
 @model IndexModel
-@{
-    ViewData["Title"] = "Home page";
-}
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Catástrofes e suas Cartilhas</h2>
+
+@if (Model.Catastrofes.Count == 0)
+{
+    <p>Nenhuma catástrofe cadastrada.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var cat in Model.Catastrofes)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title">@cat.Nome (@cat.Data.ToShortDateString())</h4>
+                        <p class="card-text"><strong>Cartilhas:</strong></p>
+                        <ul>
+                            @foreach (var cart in cat.Cartilhas)
+                            {
+                                <li>@cart.Titulo - @cart.Descricao</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

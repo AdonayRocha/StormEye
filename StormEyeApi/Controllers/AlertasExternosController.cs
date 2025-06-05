@@ -1,48 +1,72 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
-using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using StormEye.Domain.Entities;
+using StormEye.Infrastructure.Data;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
-namespace StormEyeApi.Controllers
+namespace StormEye.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AlertasExternosController : ControllerBase
+    public class CartilhasController : ControllerBase
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly StormEyeContext _context;
 
-        public AlertasExternosController(IHttpClientFactory httpClientFactory)
+        public CartilhasController(StormEyeContext context)
         {
-            _httpClientFactory = httpClientFactory;
+            _context = context;
         }
 
-        [HttpGet("ultimos")]
-        public async Task<IActionResult> GetUltimosAlertas()
+        // GET: api/Cartilhas
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Cartilha>>> GetAll()
         {
-            var client = _httpClientFactory.CreateClient();
+            var cartilhas = await _context.Cartilhas
+                .Include(c => c.CatastrofeCartilhas)
+                    .ThenInclude(cc => cc.Catastrofe)
+                .ToListAsync();
 
-            var url = "https://www.gdacs.org/xml/rss.xml";
+            return Ok(cartilhas);
+        }
 
-            var response = await client.GetAsync(url);
+        // GET: api/Cartilhas/5
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Cartilha>> GetById(int id)
+        {
+            var cart = await _context.Cartilhas
+                .Include(c => c.CatastrofeCartilhas)
+                    .ThenInclude(cc => cc.Catastrofe)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
-            if (!response.IsSuccessStatusCode)
-                return StatusCode((int)response.StatusCode, "Erro ao acessar GDACS.");
+            if (cart == null)
+                return NotFound();
 
-            var xmlString = await response.Content.ReadAsStringAsync();
-            var xml = XDocument.Parse(xmlString);
+            return Ok(cart);
+        }
 
-            var alertas = xml.Descendants("item")
-                .Take(5)
-                .Select(item => new
-                {
-                    Titulo = item.Element("title")?.Value,
-                    Descricao = item.Element("description")?.Value,
-                    Link = item.Element("link")?.Value,
-                    DataPublicacao = item.Element("pubDate")?.Value
-                });
+        // POST: api/Cartilhas
+        [HttpPost]
+        public async Task<ActionResult<Cartilha>> Create([FromBody] Cartilha payload)
+        {
+            _context.Cartilhas.Add(payload);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetById), new { id = payload.Id }, payload);
+        }
 
-            return Ok(alertas);
+        // PUT ou PATCH podem ser adicionados se quiser editar uma Cartilha
+
+        // DELETE: api/Cartilhas/5
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var cart = await _context.Cartilhas.FindAsync(id);
+            if (cart == null) return NotFound();
+
+            _context.Cartilhas.Remove(cart);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

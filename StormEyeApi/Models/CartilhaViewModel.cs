@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace StormEyeApi.Models
 {
     [Table("TGS_CARTILHA_MAPEADA")]
-    public class CartilhaMapeada
+    public class CartilhaViewModel
     {
         [Key]
         [Column("IDCARTILHAM")]
@@ -22,6 +22,6 @@ namespace StormEyeApi.Models
         [Column("ATIVO")]
         public bool Ativo { get; set; }
 
-        public virtual CatastrofeMapeada Catastrofe { get; set; }
+        public virtual CatastrofeViewModel Catastrofe { get; set; }
     }
 }

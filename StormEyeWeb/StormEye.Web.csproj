@@ -1,15 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
-    <Content Remove="Pages\Catastrofes\Index.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\Catastrofes\Index.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\StormEyeApi\StormEyeApi.csproj" />
+    <ProjectReference Include="..\StormEyeApi\StormEye.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

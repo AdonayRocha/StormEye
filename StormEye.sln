@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormEyeApi", "StormEyeApi\StormEyeApi.csproj", "{C865FFF7-AFC4-44BB-9157-25C0820FB3CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormEye.Api", "StormEyeApi\StormEye.Api.csproj", "{C865FFF7-AFC4-44BB-9157-25C0820FB3CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormEyeWeb", "StormEyeWeb\StormEyeWeb.csproj", "{1E66D8F3-9E39-4E3D-8E66-88D375EB0718}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormEye.Web", "StormEyeWeb\StormEye.Web.csproj", "{1E66D8F3-9E39-4E3D-8E66-88D375EB0718}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormEye.Domain", "StormEye.Domain\StormEye.Domain.csproj", "{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormEye.Infrastructure", "StormEye.Infrastructure\StormEye.Infrastructure.csproj", "{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,30 @@ Global
 		{1E66D8F3-9E39-4E3D-8E66-88D375EB0718}.Release|x64.Build.0 = Release|Any CPU
 		{1E66D8F3-9E39-4E3D-8E66-88D375EB0718}.Release|x86.ActiveCfg = Release|Any CPU
 		{1E66D8F3-9E39-4E3D-8E66-88D375EB0718}.Release|x86.Build.0 = Release|Any CPU
+		{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}.Debug|x64.Build.0 = Debug|Any CPU
+		{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}.Debug|x86.Build.0 = Debug|Any CPU
+		{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}.Release|Any CPU.Build.0 = Release|Any CPU
+		{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}.Release|x64.ActiveCfg = Release|Any CPU
+		{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}.Release|x64.Build.0 = Release|Any CPU
+		{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}.Release|x86.ActiveCfg = Release|Any CPU
+		{969F5AFA-19DA-46ED-AFD3-0B7B7D7E7881}.Release|x86.Build.0 = Release|Any CPU
+		{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}.Debug|x64.Build.0 = Debug|Any CPU
+		{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}.Debug|x86.Build.0 = Debug|Any CPU
+		{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}.Release|x64.ActiveCfg = Release|Any CPU
+		{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}.Release|x64.Build.0 = Release|Any CPU
+		{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}.Release|x86.ActiveCfg = Release|Any CPU
+		{C56B2000-DE50-450B-9D4B-52DA2B1E78A7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

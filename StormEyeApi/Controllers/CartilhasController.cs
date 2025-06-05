@@ -7,23 +7,23 @@ namespace StormEyeApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CartilhaMapeadaController : ControllerBase
+    public class CartilhasController : ControllerBase
     {
         private readonly StormEyeContext _context;
 
-        public CartilhaMapeadaController(StormEyeContext context)
+        public CartilhasController(StormEyeContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CartilhaMapeada>>> GetAll()
+        public async Task<ActionResult<IEnumerable<CartilhaViewModel>>> GetAll()
         {
             return await _context.Cartilhas.Include(c => c.Catastrofe).ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CartilhaMapeada>> GetById(int id)
+        public async Task<ActionResult<CartilhaViewModel>> GetById(int id)
         {
             var cartilha = await _context.Cartilhas
                 .Include(c => c.Catastrofe)
@@ -34,7 +34,7 @@ namespace StormEyeApi.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<CartilhaMapeada>> Create(CartilhaMapeada cartilha)
+        public async Task<ActionResult<CartilhaViewModel>> Create(CartilhaViewModel cartilha)
         {
             _context.Cartilhas.Add(cartilha);
             await _context.SaveChangesAsync();
@@ -42,7 +42,7 @@ namespace StormEyeApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, CartilhaMapeada model)
+        public async Task<IActionResult> Update(int id, CartilhaViewModel model)
         {
             if (id != model.IdCartilhaM) return BadRequest();
 

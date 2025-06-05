@@ -5,14 +5,14 @@ namespace StormEyeApi.Data
 {
     public class StormEyeContext : DbContext
     {
-        public DbSet<CatastrofeMapeada> Catastrofes { get; set; }
-        public DbSet<CartilhaMapeada> Cartilhas { get; set; }
+        public DbSet<CatastrofeViewModel> Catastrofes { get; set; }
+        public DbSet<CartilhaViewModel> Cartilhas { get; set; }
 
         public StormEyeContext(DbContextOptions<StormEyeContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CatastrofeMapeada>(entity =>
+            modelBuilder.Entity<CatastrofeViewModel>(entity =>
             {
                 entity.ToTable("TGS_CATASTROFE_MAPEADA");
                 entity.HasKey(e => e.IdCatastrofeM);
