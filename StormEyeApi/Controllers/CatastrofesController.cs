@@ -5,8 +5,14 @@ using StormEye.Infrastructure.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using StormEye.Domain.Entities;
+using StormEye.Infrastructure.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace StormEye.API.Controllers
+namespace StormEye.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -21,41 +27,35 @@ namespace StormEye.API.Controllers
 
         // GET: api/Catastrofes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Catastrofe>>> GetAll()
+        public async Task<ActionResult<IEnumerable<CatastrofeMapeada>>> GetAll()
         {
+            // Incluir as Cartilhas vinculadas a cada Catastrofe
             var catastrofes = await _context.Catastrofes
-                .Include(c => c.CatastrofeCartilhas)
-                    .ThenInclude(cc => cc.Cartilha)
+                .Include(c => c.Cartilhas)
                 .ToListAsync();
-
             return Ok(catastrofes);
         }
 
         // GET: api/Catastrofes/5
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Catastrofe>> GetById(int id)
+        public async Task<ActionResult<CatastrofeMapeada>> GetById(int id)
         {
             var cat = await _context.Catastrofes
-                .Include(c => c.CatastrofeCartilhas)
-                    .ThenInclude(cc => cc.Cartilha)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .Include(c => c.Cartilhas)
+                .FirstOrDefaultAsync(c => c.IdCatastrofeM == id);
 
-            if (cat == null)
-                return NotFound();
-
+            if (cat == null) return NotFound();
             return Ok(cat);
         }
 
         // POST: api/Catastrofes
         [HttpPost]
-        public async Task<ActionResult<Catastrofe>> Create([FromBody] Catastrofe payload)
+        public async Task<ActionResult<CatastrofeMapeada>> Create([FromBody] CatastrofeMapeada payload)
         {
             _context.Catastrofes.Add(payload);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = payload.Id }, payload);
+            return CreatedAtAction(nameof(GetById), new { id = payload.IdCatastrofeM }, payload);
         }
-
-        // PUT ou PATCH podem ser adicionados aqui se quiser editar uma Catastrofe
 
         // DELETE: api/Catastrofes/5
         [HttpDelete("{id:int}")]
@@ -70,37 +70,39 @@ namespace StormEye.API.Controllers
         }
 
         // POST: api/Catastrofes/{catId}/cartilhas/{cartId}
-        // Associa uma Cartilha a esta Catastrofe
+        // Associa uma Cartilha existente a esta Catastrofe
         [HttpPost("{catId:int}/cartilhas/{cartId:int}")]
         public async Task<IActionResult> LinkCartilha(int catId, int cartId)
         {
-            var exists = await _context.CatastrofeCartilhas.FindAsync(catId, cartId);
-            if (exists != null)
-                return BadRequest("Essa associação já existe.");
-
-            // Para garantir que ambos existam
             var cat = await _context.Catastrofes.FindAsync(catId);
             var cart = await _context.Cartilhas.FindAsync(cartId);
-            if (cat == null || cart == null)
-                return NotFound("Catastrofe ou Cartilha não encontrado.");
 
-            _context.CatastrofeCartilhas.Add(
-                new CatastrofeCartilha { CatastrofeId = catId, CartilhaId = cartId }
-            );
+            if (cat == null || cart == null) return NotFound("Catastrofe ou Cartilha não encontrado.");
+
+            // Se já estiver associado, retorna BadRequest
+            if (cart.IdCatastrofeM == catId)
+            {
+                return BadRequest("Esta Cartilha já está vinculada a essa Catastrofe.");
+            }
+
+            cart.IdCatastrofeM = catId;
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
         // DELETE: api/Catastrofes/{catId}/cartilhas/{cartId}
-        // Desassocia uma Cartilha desta Catastrofe
+        // Desassocia a Cartilha dessa Catastrofe (seta FK para null ou remove registro?)
         [HttpDelete("{catId:int}/cartilhas/{cartId:int}")]
         public async Task<IActionResult> UnlinkCartilha(int catId, int cartId)
         {
-            var link = await _context.CatastrofeCartilhas.FindAsync(catId, cartId);
-            if (link == null)
+            var cart = await _context.Cartilhas.FindAsync(cartId);
+
+            if (cart == null || cart.IdCatastrofeM != catId)
                 return NotFound();
 
-            _context.CatastrofeCartilhas.Remove(link);
+            // Para “desassociar” basta definir a FK como 0 ou null – 
+            // mas como no nosso modelo a FK é int (não-nullable), vou colocar 0 e depois você decide se quer apagar a cartilha ou obrigar reatribuição.
+            cart.IdCatastrofeM = 0;
             await _context.SaveChangesAsync();
             return NoContent();
         }

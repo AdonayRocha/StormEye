@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StormEyeApi.Data;
-using StormEyeApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using StormEye.Domain.Entities;
+using StormEye.Infrastructure.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace StormEyeApi.Controllers
+namespace StormEye.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -16,51 +20,47 @@ namespace StormEyeApi.Controllers
             _context = context;
         }
 
+        // GET: api/Cartilhas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CartilhaViewModel>>> GetAll()
+        public async Task<ActionResult<IEnumerable<CartilhaMapeada>>> GetAll()
         {
-            return await _context.Cartilhas.Include(c => c.Catastrofe).ToListAsync();
+            // Incluir info da Catastrofe a que pertence (se precisar)
+            var cartilhas = await _context.Cartilhas
+                .Include(c => c.Catastrofe)
+                .ToListAsync();
+            return Ok(cartilhas);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CartilhaViewModel>> GetById(int id)
+        // GET: api/Cartilhas/5
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<CartilhaMapeada>> GetById(int id)
         {
-            var cartilha = await _context.Cartilhas
+            var cart = await _context.Cartilhas
                 .Include(c => c.Catastrofe)
                 .FirstOrDefaultAsync(c => c.IdCartilhaM == id);
 
-            return cartilha == null ? NotFound() : Ok(cartilha);
+            if (cart == null) return NotFound();
+            return Ok(cart);
         }
 
-
+        // POST: api/Cartilhas
         [HttpPost]
-        public async Task<ActionResult<CartilhaViewModel>> Create(CartilhaViewModel cartilha)
+        public async Task<ActionResult<CartilhaMapeada>> Create([FromBody] CartilhaMapeada payload)
         {
-            _context.Cartilhas.Add(cartilha);
+            _context.Cartilhas.Add(payload);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = cartilha.IdCartilhaM }, cartilha);
+            return CreatedAtAction(nameof(GetById), new { id = payload.IdCartilhaM }, payload);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, CartilhaViewModel model)
-        {
-            if (id != model.IdCartilhaM) return BadRequest();
-
-            _context.Entry(model).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
+        // DELETE: api/Cartilhas/5
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var item = await _context.Cartilhas.FindAsync(id);
-            if (item == null) return NotFound();
+            var cart = await _context.Cartilhas.FindAsync(id);
+            if (cart == null) return NotFound();
 
-            _context.Cartilhas.Remove(item);
+            _context.Cartilhas.Remove(cart);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
     }

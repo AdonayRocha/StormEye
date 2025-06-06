@@ -1,19 +1,32 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using StormEye.Web.Models;       
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
-namespace StormEyeWeb.Pages;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using StormEye.Web.Models;         
 
-public class IndexModel : PageModel
+namespace StormEye.Web.Pages       
 {
-    private readonly ILogger<IndexModel> _logger;
-
-    public IndexModel(ILogger<IndexModel> logger)
+    public class IndexModel : PageModel
     {
-        _logger = logger;
-    }
+        private readonly IHttpClientFactory _clientFactory;
 
-    public void OnGet()
-    {
+        public List<CatastrofeViewModel> Catastrofes { get; set; } = new();
 
+        public IndexModel(IHttpClientFactory clientFactory)
+        {
+            _clientFactory = clientFactory;
+        }
+
+        public async Task OnGetAsync()
+        {
+            var client = _clientFactory.CreateClient("StormEyeAPI");
+            var response = await client.GetFromJsonAsync<List<CatastrofeViewModel>>("api/Catastrofes");
+            if (response != null)
+                Catastrofes = response;
+        }
     }
 }

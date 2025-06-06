@@ -1,11 +1,11 @@
 ﻿@page
-@model IndexModel
+@model StormEye.Web.Pages.IndexModel
 
-<h2>Catástrofes e suas Cartilhas</h2>
+<h2>Catástrofes e Cartilhas</h2>
 
-@if (Model.Catastrofes.Count == 0)
+@if (Model.Catastrofes == null || Model.Catastrofes.Count == 0)
 {
-    <p>Nenhuma catástrofe cadastrada.</p>
+    <p>Não há catástrofes cadastradas.</p>
 }
 else
 {
@@ -15,12 +15,12 @@ else
             <div class="col-md-6 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h4 class="card-title">@cat.Nome (@cat.Data.ToShortDateString())</h4>
-                        <p class="card-text"><strong>Cartilhas:</strong></p>
+                        <h4 class="card-title">@cat.NomeCatastrofeM (@cat.Data.ToShortDateString())</h4>
+                        <p><strong>Cartilhas associadas:</strong></p>
                         <ul>
-                            @foreach (var cart in cat.Cartilhas)
+                            @foreach (var ct in cat.Cartilhas)
                             {
-                                <li>@cart.Titulo - @cart.Descricao</li>
+                                <li>@ct.Nome – @ct.Descricao</li>
                             }
                         </ul>
                     </div>

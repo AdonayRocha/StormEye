@@ -1,17 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using StormEyeApi.Data;
+using StormEye.Infrastructure.Data;     
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configura o HttpClient para chamadas externas 
-builder.Services.AddHttpClient();
-
-// Configura o EF Core com Oracle
 builder.Services.AddDbContext<StormEyeContext>(options =>
-    options.UseOracle(builder.Configuration.GetConnectionString("OracleDb")));
-
-// Adiciona suporte a controllers
-builder.Services.AddControllers();
+    options.UseOracle(builder.Configuration.GetConnectionString("OracleDb"))
+);
 
 builder.Services.AddCors(options =>
 {
@@ -23,23 +18,39 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Adiciona suporte ao Swagger 
+builder.Services.AddControllers()
+       .AddNewtonsoftJson(opt =>
+           opt.SerializerSettings.ReferenceLoopHandling =
+               Newtonsoft.Json.ReferenceLoopHandling.Ignore
+       );
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "StormEye API",
+        Version = "v1",
+        Description = "API REST para Catástrofes e Cartilhas (Oracle + EF Core)"
+    });
+
+});
 
 var app = builder.Build();
 
-app.UseCors("AllowAll");
-
-// Habilita Swagger no ambiente de desenvolvimento
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "StormEye API v1");
+        c.RoutePrefix = "swagger";
+    });
 }
 
+app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

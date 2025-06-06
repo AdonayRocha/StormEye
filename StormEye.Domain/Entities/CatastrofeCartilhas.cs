@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace StormEye.Domain.Entities
 {
-    public class CatastrofeCartilha
+    public class CatastrofeCartilhas
     {
         public int CatastrofeId { get; set; }
-        public Catastrofe Catastrofe { get; set; }
+        public CatastrofeMapeada Catastrofe { get; set; }
 
         public int CartilhaId { get; set; }
-        public Cartilha Cartilha { get; set; }
+        public CartilhaMapeada Cartilha { get; set; }
     }
 }
 
