@@ -76,6 +76,94 @@ dotnet run
 Acesse no navegador: [https://localhost:7137/swagger](https://localhost:7137/swagger)
 
 ---
+Diagram Model
+```classDiagram
+direction TB
+    class CatastrofeMapeada {
+	    +int IdCatastrofeM
+	    +string NomeCatastrofeM
+	    +DateTime Data
+	    +string Descricao
+	    +string Localizacao
+	    +string Tipo
+	    +string Gravidade
+	    +bool Ativo
+	    +List~CartilhaMapeada~ Cartilhas
+    }
+
+    class CartilhaMapeada {
+	    +int IdCartilhaM
+	    +int IdCatastrofeM
+	    +string Nome
+	    +string Descricao
+	    +string Categoria
+	    +bool Ativo
+	    +CatastrofeMapeada Catastrofe
+    }
+
+    class StormEyeContext {
+	    +DbSet~CatastrofeMapeada~ Catastrofes
+	    +DbSet~CartilhaMapeada~ Cartilhas
+	    +DbSet~AlertaExterno~ AlertasExternos
+    }
+
+    class IGdacsService {
+	    +Task~string~ GetActiveEventsJsonAsync()
+    }
+
+    class GdacsService {
+	    -HttpClient _httpClient
+	    -string _feedUrl
+	    +Task~string~ GetActiveEventsJsonAsync()
+    }
+
+    class ICatastrofeService {
+	    +Task~IEnumerable~ GetTodasAsync()
+	    +Task~CatastrofeMapeada~ GetPorIdAsync(int)
+	    +Task~CatastrofeMapeada~ CriaAsync(CatastrofeMapeada)
+	    +Task~bool~ AtualizaAsync(int, CatastrofeMapeada)
+	    +Task~bool~ DeletaAsync(int)
+	    +Task~bool~ AssociaCartilhaAsync(int, int)
+	    +Task~bool~ DesassociaCartilhaAsync(int, int)
+    }
+
+    class CatastrofeService {
+	    -StormEyeContext _context
+	    +... // métodos implementados
+    }
+
+    class CatastrofesController {
+	    +GetAll()
+	    +GetById(int)
+	    +Create(CatastrofeMapeada)
+	    +Delete(int)
+	    +LinkCartilha(int, int)
+	    +UnlinkCartilha(int, int)
+    }
+
+    class CartilhasController {
+	    +GetAll()
+	    +GetById(int)
+	    +Create(CartilhaMapeada)
+	    +Delete(int)
+    }
+
+    class GdacsController {
+	    +GetLastEvents()
+    }
+
+    GdacsService ..|> IGdacsService
+    CatastrofeService ..|> ICatastrofeService
+    CatastrofesController --> StormEyeContext
+    CartilhasController --> StormEyeContext
+    GdacsController --> IGdacsService
+    StormEyeContext --> CatastrofeMapeada
+    StormEyeContext --> CartilhaMapeada
+    CatastrofeMapeada "1" --> "many" CartilhaMapeada : contém
+    CartilhaMapeada --> CatastrofeMapeada : pertence ``` 
+
+
+---
 
 ## 🛠 Tecnologias Utilizadas
 
