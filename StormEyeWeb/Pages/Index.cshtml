@@ -1,7 +1,11 @@
 ﻿@page
-@model StormEye.Web.Pages.IndexModel
+@model StormEyeWeb.Pages.IndexModel
 
-<h2>Catástrofes e Cartilhas</h2>
+@{
+    ViewData["Title"] = "Catástrofes e Cartilhas";
+}
+
+<h2>@ViewData["Title"]</h2>
 
 @if (Model.Catastrofes == null || Model.Catastrofes.Count == 0)
 {
