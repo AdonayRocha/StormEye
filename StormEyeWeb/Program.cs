@@ -4,12 +4,9 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpClient("StormEyeAPI", client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7137/");
-});
+builder.Services.AddControllersWithViews();
 
-builder.Services.AddRazorPages();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -25,6 +22,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapRazorPages();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 
 app.Run();
