@@ -77,6 +77,7 @@ Acesse no navegador: [https://localhost:7137/swagger](https://localhost:7137/swa
 
 ---
 Diagram Model
+
 ::: mermaid
 classDiagram
 direction TB
