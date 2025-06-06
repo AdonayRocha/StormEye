@@ -1,6 +1,6 @@
 # StormEye 🌪️🛰️
 
-API RESTful para monitoramento e gerenciamento de catástrofes naturais, desenvolvida com **.NET 9** e **Entity Framework Core**, utilizando banco de dados Oracle.
+API RESTful para monitoramento e gerenciamento de eventos relacionados a catástrofes naturais e cartilhas de sobrevivência, desenvolvida com **.NET 9** e **Entity Framework Core**, utilizando banco de dados Oracle.
 
 ---
 
@@ -8,10 +8,7 @@ API RESTful para monitoramento e gerenciamento de catástrofes naturais, desenvo
 
 - CRUD de Catástrofes  
 - CRUD de Cartilhas  
-- Associação e desassociação de cartilhas a catástrofes  
-- CRUD de Alertas Externos  
-- Endpoint de previsão do tempo (`/weatherforecast`)  
-- Integração com serviço GDACS para alertas globais  
+- GET  de Alertas Externos  (GDAC)
 - Documentação automática da API via OpenAPI (Swagger)  
 
 ---
@@ -37,11 +34,6 @@ API RESTful para monitoramento e gerenciamento de catástrofes naturais, desenvo
 ### 🔔 Alertas Externos (GDACS)
 
 - `GET /api/gdacs/last` — Retorna os alertas ativos mais recentes  
-
-### ☁️ Previsão do Tempo
-
-- `GET /weatherforecast` — Retorna dados de previsão meteorológica simulados  
-
 ---
 
 ## 📖 Documentação da API - Swagger (OpenAPI)
@@ -57,8 +49,7 @@ API RESTful para monitoramento e gerenciamento de catástrofes naturais, desenvo
 - `StormEye.Domain`: Entidades de domínio  
 - `StormEye.Infrastructure`: EF Core, Migrations e Contexto  
 - `StormEyeApi`: Controllers, configuração e Swagger  
-- `StormEyeWeb`: Front-end Razor (caso habilitado)  
-
+- `StormEyeWeb`: Front-end Razor 
 ---
 
 ## 🚀 Como Executar
@@ -93,7 +84,7 @@ Acesse no navegador: [https://localhost:7137/swagger](https://localhost:7137/swa
 - Oracle Database  
 - Swagger / Swashbuckle  
 - C# 9  
-- Razor Pages (opcional)  
+- Razor Pages 
 - JavaScript / CSS  
 
 ---
