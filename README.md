@@ -77,7 +77,8 @@ Acesse no navegador: [https://localhost:7137/swagger](https://localhost:7137/swa
 
 ---
 Diagram Model
-```classDiagram
+::: mermaid
+classDiagram
 direction TB
     class CatastrofeMapeada {
 	    +int IdCatastrofeM
@@ -160,7 +161,8 @@ direction TB
     StormEyeContext --> CatastrofeMapeada
     StormEyeContext --> CartilhaMapeada
     CatastrofeMapeada "1" --> "many" CartilhaMapeada : contém
-    CartilhaMapeada --> CatastrofeMapeada : pertence ``` 
+    CartilhaMapeada --> CatastrofeMapeada : pertence 
+:::
 
 
 ---
