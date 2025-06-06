@@ -162,8 +162,7 @@ classDiagram
     GdacsController --> IGdacsService
     StormEyeContext --> CatastrofeMapeada
     StormEyeContext --> CartilhaMapeada
-    CatastrofeMapeada "1" --> "many" CartilhaMapeada : contém
-    CartilhaMapeada --> CatastrofeMapeada : pertence
+    CartilhaMapeada "1" --> "many" CatastrofeMapeada : contém
 ```
 
 
