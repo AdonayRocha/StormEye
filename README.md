@@ -25,11 +25,11 @@
 
 ## Sobre o Projeto
 
-O **StormEye** é um sistema de monitoramento e gerenciamento de catástrofes naturais. Ele reúne informações sobre eventos extremos (como tempestades, terremotos, inundações etc.), disponibiliza cartilhas de prevenção e processa alertas externos provenientes de fontes como a API do GDACS (Global Disaster Alert and Coordination System). A aplicação é dividida em três camadas principais:
+O **StormEye** é um sistema de monitoramento e gerenciamento de catástrofes naturais. Ele reúne informações sobre eventos extremos (como tempestades, terremotos, inundações etc.), disponibiliza cartilhas de prevenção. A aplicação é dividida em três camadas principais:
 
 1. **StormEye.Domain**: Contém as entidades que representam o modelo de domínio (Catástrofe, Cartilha, Alerta Externo).  
-2. **StormEye.Infrastructure**: Responsável pela persistência (Entity Framework Core) e integração com serviços externos (por exemplo, GDACS).  
-3. **StormEyeApi**: Exposta como uma API RESTful em ASP.NET Core, agrupa os _controllers_ que lidam com Catástrofes, Cartilhas e Alertas Externos.  
+2. **StormEye.Infrastructure**: Responsável pela persistência (Entity Framework Core).  
+3. **StormEyeApi**: Exposta como uma API RESTful em ASP.NET Core, agrupa os _controllers_ que lidam com Catástrofes, Cartilhas.  
 4. **StormEyeWeb**: Projeto front-end (ASP.NET MVC ou SPA) que consome a API e apresenta uma interface para o usuário final.
 
 O objetivo principal é oferecer uma visão consolidada de catástrofes em tempo real, além de materiais educativos (cartilhas) e alerts periódicos automatizados.
@@ -62,15 +62,12 @@ StormEye.sln
 │    ├─ Data:
 │    │    └─ StormEyeContext.cs         ← DbContext configurado
 │    ├─ Migrations/                     ← Migrations do EF Core
-│    ├─ Service:
-│    │    └─ GDACSService.cs            ← Integração com API GDACS
 │    └─ (Repositórios, configurações de conexão, etc.)
 │
 ├─ StormEyeApi
 │    ├─ Controllers:
 │    │    ├─ CatastrofesController.cs   ← CRUD de catástrofes
 │    │    ├─ CartilhasController.cs     ← CRUD de cartilhas
-│    │    └─ AlertasExternosController.cs← Processamento de alertas (e CRUD)
 │    ├─ Program.cs                      ← Configuração de serviços, EF Core, CORS etc.
 │    ├─ appsettings.json                ← String de conexão, chaves de API
 │    └─ (Outros arquivos de configuração)
@@ -118,22 +115,9 @@ direction LR
         +string Categoria
     }
 
-    class AlertaExterno {
-        +int Id
-        +string Fonte
-        +string TipoEvento
-        +DateTime DataAlerta
-        +string Descricao
-        +string Localizacao
-        +decimal Latitude
-        +decimal Longitude
-        +string Severidade
-    }
-
     class StormEyeContext {
         +DbSet<CatastrofeMapeada> Catastrofes
         +DbSet<CartilhaMapeada> Cartilhas
-        +DbSet<AlertaExterno> AlertasExternos
     }
 
     class CatastrofesController {
@@ -154,25 +138,15 @@ direction LR
         +delete(id: int)
     }
 
-    class AlertasExternosController {
-        <<Controller>>
-        +getAll()
-        +getById(id: int)
-    }
-
     StormEyeContext --> CatastrofeMapeada : contém
     StormEyeContext --> CartilhaMapeada : contém
-    StormEyeContext --> AlertaExterno : contém
 
     CatastrofesController --> StormEyeContext : utiliza
     CartilhasController --> StormEyeContext : utiliza
-    AlertasExternosController --> StormEyeContext : consulta
 ```
 
     CatastrofesController --> StormEyeContext : utiliza
     CartilhasController --> StormEyeContext : utiliza
-    AlertasExternosController --> GDACSService : utiliza
-    AlertasExternosController --> StormEyeContext : consulta
 ```
 
 ---
@@ -188,8 +162,6 @@ direction LR
 - **Dependências externas**:  
   - `Microsoft.EntityFrameworkCore`  
   - `Microsoft.EntityFrameworkCore.SqlServer` (ou outro provider)  
-  - `Microsoft.Extensions.Hosting` (para Hosted Service de integração GDACS)  
-
 ---
 
 ## Como Executar
@@ -215,10 +187,6 @@ cd StormEye
    {
      "ConnectionStrings": {
        "DefaultConnection": "Server=localhost;Database=StormEyeDb;User Id=sa;Password=SuaSenha123;"
-     },
-     "GDACS": {
-       "ApiUrl": "https://www.gdacs.org/gdacsapi/api",
-       "ApiKey": "SUA_CHAVE_GDACS"
      },
      "Logging": {
        "LogLevel": {
@@ -270,7 +238,7 @@ cd StormEye
    dotnet run
    ```
 
-3. Por padrão, o site ficará disponível em `https://localhost:5002` (ou porta configurada no `launchSettings.json`). O front-end consome os endpoints da API para listar catástrofes, exibir detalhes, ler cartilhas e mostrar alertas externos.
+3. Por padrão, o site ficará disponível em `https://localhost:5002` (ou porta configurada no `launchSettings.json`). O front-end consome os endpoints da API para listar catástrofes, exibir detalhes e ler cartilhas.
 
 ---
 
