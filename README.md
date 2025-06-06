@@ -40,10 +40,8 @@ O objetivo principal é oferecer uma visão consolidada de catástrofes em tempo
 
 - CRUD completo de **Catástrofes** (nome, data, descrição, localização, tipo, gravidade).  
 - CRUD completo de **Cartilhas** (título, conteúdo, categoria).  
-- Processamento automático de **Alertas Externos** obtidos via API GDACS.  
 - Endpoints RESTful para consulta de todos os recursos (GET, POST, PUT, DELETE).  
 - Interface web responsiva para consulta de catástrofes, leitura de cartilhas e visualização de alertas.  
-- Serviço de agendamento para buscar novos alertas periodicamente (Hosted Service).  
 - Contexto EF Core configurado para SQL Server (ou outro provedor configurável).  
 
 ---
@@ -87,14 +85,12 @@ StormEye.sln
   Contém apenas as classes que representam as tabelas do banco (CatastrofeMapeada, CartilhaMapeada, AlertaExterno) e eventuais _Value Objects_ ou _Enums_ relacionados.
 
 - **Camada de Infraestrutura (Infrastructure)**  
-  Implementa o `StormEyeContext` (derivado de `DbContext`) e todas as configurações necessárias para EF Core. Também inclui o `GDACSService`, responsável por chamar a API externa do GDACS para obter alertas em tempo real e persistir no banco.
-
+  
 - **API (StormEyeApi)**  
   Exposta em ASP.NET Core. Possui três _controllers_ principais:  
   - `CatastrofesController`: expõe endpoints para CRUD de catástrofes.  
   - `CartilhasController`: expõe endpoints para CRUD de cartilhas.  
-  - `AlertasExternosController`: expõe endpoints para CRUD de alertas e endpoint adicional para forçar a busca de novos alertas do GDACS.  
-
+  
 - **Front-end (StormEyeWeb)**  
   Projeto que consome os mesmos endpoints da API, apresentando uma interface amigável para listar catástrofes, visualizar detalhes, ler cartilhas e acompanhar alertas recentes.
 
@@ -140,13 +136,6 @@ direction LR
         +DbSet<AlertaExterno> AlertasExternos
     }
 
-    class GDACSService {
-        +string ApiUrl
-        +string ApiKey
-        +Task<IEnumerable<AlertaExterno>> GetLatestAlertsAsync()
-        +Task ProcessarAlertasPeriodicamente()
-    }
-
     class CatastrofesController {
         <<Controller>>
         +getAll()
@@ -169,14 +158,16 @@ direction LR
         <<Controller>>
         +getAll()
         +getById(id: int)
-        +processarGDACS()
     }
 
     StormEyeContext --> CatastrofeMapeada : contém
     StormEyeContext --> CartilhaMapeada : contém
     StormEyeContext --> AlertaExterno : contém
 
-    GDACSService --> StormEyeContext : consulta/atualiza
+    CatastrofesController --> StormEyeContext : utiliza
+    CartilhasController --> StormEyeContext : utiliza
+    AlertasExternosController --> StormEyeContext : consulta
+```
 
     CatastrofesController --> StormEyeContext : utiliza
     CartilhasController --> StormEyeContext : utiliza
@@ -188,7 +179,7 @@ direction LR
 
 ## Tecnologias Utilizadas
 
-- **.NET 7+ / ASP.NET Core**  
+- **.NET 9 / ASP.NET Core**
 - **Entity Framework Core** (com Migrations e `StormEyeContext`)  
 - **SQL Server** (ou qualquer outro banco suportado pelo EF Core)  
 - **C# 11** (apenas como sugestão; adaptar conforme versões instaladas)  
@@ -205,8 +196,8 @@ direction LR
 
 ### Pré-requisitos
 
-1. [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0) (ou versão compatível)  
-2. [SQL Server](https://www.microsoft.com/pt-br/sql-server) (local ou em nuvem)  
+1. [.NET 9 SDK](https://dotnet.microsoft.com/pt-br/download/dotnet/9.0) (Uu versão compatível)  
+2. [SQL Server](https://www.microsoft.com/pt-br/sql-server) (Local ou em nuvem)  
 3. [Git](https://git-scm.com/downloads)  
 
 ### Clonando o Repositório
@@ -341,43 +332,8 @@ cd StormEye
 - **DELETE** `/api/cartilhas/{id}`  
   Remove uma cartilha pelo `id`.
 
-### Alertas Externos
-
-- **GET** `/api/alertasexternos`  
-  Retorna todos os alertas externos armazenados no sistema.
-
-- **GET** `/api/alertasexternos/{id}`  
-  Retorna um alerta externo específico.
-
-- **POST** `/api/alertasexternos/processarGDACS`  
-  Aciona manualmente a chamada à API GDACS para buscar novos alertas e persistir no banco.
-
-- **DELETE** `/api/alertasexternos/{id}`  
-  Remove um alerta externo armazenado.
-
----
-
-## Contribuição
-
-1. Faça um _fork_ deste repositório.  
-2. Crie uma branch com a feature ou correção desejada (`git checkout -b minha-feature`).  
-3. Faça commits das suas alterações (`git commit -m 'Implementa nova feature'`).  
-4. Faça _push_ para a sua branch (`git push origin minha-feature`).  
-5. Abra um _Pull Request_ explicando as alterações propostas.
-
-> Antes de abrir o PR, certifique-se de que:  
-> - Os testes estão passando (se houver testes automatizados).  
-> - O estilo de código segue o padrão do projeto (indentação, nomenclatura, comentários mínimos necessários).  
-
 ---
 
 ## Licença
 
 Este projeto está licenciado sob a [MIT License](https://opensource.org/licenses/MIT). Consulte o arquivo `LICENSE` para mais detalhes.
-
----
-
-## Contato
-
-- **Autor:** StormEye 
-- **GitHub:** [https://github.com/AdonayRocha](https://github.com/AdonayRocha)
