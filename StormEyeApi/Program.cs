@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using StormEye.Infrastructure.Data;   
-using StormEyeApi.Services;           
+using StormEyeApi;           
 
 var builder = WebApplication.CreateBuilder(args);
 

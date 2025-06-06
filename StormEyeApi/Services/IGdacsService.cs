@@ -1,15 +1,11 @@
-﻿using System.Threading.Tasks;
-
-namespace StormEyeApi.Services
+﻿public interface IGdacsService
 {
     /// <summary>
-    /// Abstração para chamar a API externa do GDACS.
+    /// Obtém eventos ativos do GDACS em formato JSON
     /// </summary>
-    public interface IGdacsService
-    {
-        /// <summary>
-        /// Obtém o JSON completo de eventos ativos do GDACS.
-        /// </summary>
-        Task<string> GetActiveEventsJsonAsync();
-    }
+    /// <returns>JSON serializado com estrutura padronizada</returns>
+    /// <exception cref="ApplicationException">
+    /// Lançada em falhas de comunicação ou parsing
+    /// </exception>
+    Task<string> GetActiveEventsJsonAsync();
 }

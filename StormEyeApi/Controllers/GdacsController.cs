@@ -1,72 +1,46 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StormEyeApi.Services;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
+using StormEye;
 
-namespace StormEyeApi.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class GdacsController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class GdacsController : ControllerBase
+    private readonly IGdacsService _gdacsService;
+    private readonly ILogger<GdacsController> _logger;
+
+    public GdacsController(
+        IGdacsService gdacsService,
+        ILogger<GdacsController> logger)
     {
-        private readonly IGdacsService _gdacsService;
+        _gdacsService = gdacsService;
+        _logger = logger;
+    }
 
-        public GdacsController(IGdacsService gdacsService)
+    [HttpGet("last")]
+    public async Task<IActionResult> GetLastEvents()
+    {
+        try
         {
-            _gdacsService = gdacsService;
+            var json = await _gdacsService.GetActiveEventsJsonAsync();
+            return Content(json, "application/json");
         }
-
-        /// <summary>
-        /// GET /api/gdacs/last
-        /// Retorna apenas o último evento ativo listado no JSON do GDACS.
-        /// </summary>
-        [HttpGet("last")]
-        public async Task<IActionResult> GetLastEvent()
+        catch (HttpRequestException ex)
         {
-            try
+            _logger.LogError(ex, "Falha na requisição GDACS");
+            return StatusCode(503, new
             {
-                var rawJson = await _gdacsService.GetActiveEventsJsonAsync();
-
-                using var doc = JsonDocument.Parse(rawJson);
-                var root = doc.RootElement;
-
-                JsonElement arrayElement;
-
-                if (root.ValueKind == JsonValueKind.Array)
-                {
-                    arrayElement = root;
-                }
-                else if (root.TryGetProperty("features", out var features))
-                {
-                    arrayElement = features;
-                }
-                else if (root.TryGetProperty("entries", out var entries))
-                {
-                    arrayElement = entries;
-                }
-                else if (root.TryGetProperty("events", out var eventsProp))
-                {
-                    arrayElement = eventsProp;
-                }
-                else
-                {
-                    return Content(rawJson, "application/json");
-                }
-
-                if (arrayElement.GetArrayLength() == 0)
-                    return NoContent();
-
-                var lastIndex = arrayElement.GetArrayLength() - 1;
-                var lastEvent = arrayElement[lastIndex];
-
-                return Content(lastEvent.GetRawText(), "application/json");
-            }
-            catch (HttpRequestException ex)
+                error = "Serviço GDACS indisponível",
+                details = ex.Message
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogCritical(ex, "Falha crítica");
+            return StatusCode(500, new
             {
-
-                return StatusCode(503, new { error = "Não foi possível obter dados do GDACS", details = ex.Message });
-            }
+                error = "Erro interno de processamento",
+                technicalDetails = ex.InnerException?.Message
+            });
         }
     }
 }
